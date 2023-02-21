@@ -4,6 +4,7 @@ export const StyledGlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 body {
   font-family:var(--font-family);
+  letter-spacing:0.03rem;
 }
 :root{
   --color-primary:#FF577F;

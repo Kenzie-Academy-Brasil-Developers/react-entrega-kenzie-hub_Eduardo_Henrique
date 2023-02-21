@@ -1,34 +1,15 @@
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { api } from "../../services";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { StyledFormRegister } from "./style";
+import { useContext } from "react";
 
-const schema = yup.object().shape({
-  name: yup.string().required("Nome obrigatorio"),
-  email: yup
-    .string()
-    .email("Formato de email invalido")
-    .required("email obrigatorio"),
-  bio: yup.string().required("Bio obrigatorio"),
-  contact: yup.string().required("Contato obrigatorio"),
-  course_module: yup.string().required("Modulo obrigatorio"),
-  password: yup
-    .string()
-    .required("Senha é obrigatoria")
-    .matches(/[a-z]/, "Deve conter pelo menos 1 letra minuscula")
-    .matches(/[A-Z]/, "Deve conter pelo menos 1 letra maiúscula")
-    .matches(/(\d)/, "Deve conter pelo menos 1 número")
-    .matches(/(\W|_)/, "Deve conter pelo menos 1 caracter especial")
-    .matches(/.{8,}/, "Deve conter no mínimo 8 caracteres"),
-  passwordConfirmation: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "As senhas devem ser iguais")
-    .required("Confirmacao de senha é obrigatoria"),
-});
+import { schema } from "./SchemaRegister";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { UserContext } from "../../providers/UserContext";
 
 export function FormRegister() {
+
+  const { userRegister } = useContext(UserContext);
+
   const {
     register,
     handleSubmit,
@@ -36,16 +17,6 @@ export function FormRegister() {
   } = useForm({
     resolver: yupResolver(schema),
   });
-
-  const userRegister = async (data) => {
-    try {
-      await api.post("users", data);
-
-      toast.success("Conta criada com sucesso");
-    } catch (error) {
-      toast.error("Esse email ja existe");
-    }
-  };
 
   return (
     <StyledFormRegister onSubmit={handleSubmit(userRegister)} action="">

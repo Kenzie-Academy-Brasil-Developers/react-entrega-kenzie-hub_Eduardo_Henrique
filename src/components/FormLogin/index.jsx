@@ -1,57 +1,30 @@
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { api } from "../../services";
-import { useNavigate } from "react-router-dom";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useContext } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { AiFillEyeInvisible } from "react-icons/ai";
-import * as yup from "yup";
+import { UserContext } from "../../providers/UserContext"
 import { StyledFormLogin } from "./style";
-import { useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { schema } from "./SchemaLogin"
+//vai pra uma pasta de schema
 
-const schema = yup.object().shape({
-  password: yup.string().required("Senha obrigatoria"),
-  email: yup
-    .string()
-    .required("Email obrigatorio")
-    .email("Formato de email invalido"),
-});
 
-export function FormLogin({ setAuthenticated }) {
-  const navigate = useNavigate();
-
-  const [showPassword, setShowPassword] = useState(false);
-  const show = (event) => {
-    event.preventDefault();
-
-    if (!showPassword) {
-      setShowPassword(true);
-    } else if (showPassword) {
-      setShowPassword(false);
-    }
-  };
-
+export function FormLogin() {
+  //vai pra um context
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+    userLogin, 
+    show, 
+    showPassword} = useContext(UserContext)
 
-  const userLogin = async (user) => {
-    try {
-      const response = await api.post("sessions", user);
-      window.localStorage.setItem("@KenzieHub:Token", response.data.token);
-      window.localStorage.setItem("@KenzieHub:UserId", response.data.user.id);
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+      resolver: yupResolver(schema),
+    });
 
-      setAuthenticated(true);
-      navigate("/home");
-    } catch (error) {
-      toast.error("Email ou senha invalidos");
-    }
-  };
-
+ //vai pra um context
   return (
     <StyledFormLogin action="" onSubmit={handleSubmit(userLogin)}>
       <div className="container--login--email">

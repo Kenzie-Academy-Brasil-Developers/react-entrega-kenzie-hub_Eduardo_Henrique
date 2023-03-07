@@ -1,22 +1,17 @@
-import { useContext, useEffect } from "react"
-import { Outlet,useNavigate } from "react-router-dom"
-import { UserContext } from "../../providers/UserContext"
+import { useContext, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { UserContext } from "../../providers/UserContext";
 
-export const ProtectedRoutes = ()=>{
- const navigate = useNavigate()
-  
-const { userLogged } = useContext(UserContext)
+export const ProtectedRoutes = () => {
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-      if(!userLogged){
-        
-        navigate('/')
-      } 
-    },[])
+  const { userLogged } = useContext(UserContext);
 
-  return(
-    <>
-      { userLogged ? <Outlet/> : null}
-    </>
-  )
-}
+  useEffect(() => {
+    if (!userLogged) {
+      navigate("/");
+    }
+  }, []);
+
+  return <>{userLogged ? <Outlet /> : null}</>;
+};
